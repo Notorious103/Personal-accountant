@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Personal Accountant</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="theme-color" content="#000000"/>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <h1>Personal Accountant</h1>
+    <nav>
+      <button class="tab-btn" data-tab="add">+ Transaction</button>
+      <button class="tab-btn" data-tab="ledger">Ledger</button>
+      <button class="tab-btn" data-tab="accounts">Accounts</button>
+      <button class="tab-btn" data-tab="reports">Reports</button>
+      <button class="tab-btn" data-tab="backup">Backup</button>
+    </nav>
+  </header>
+
+  <main>
+    <section id="add" class="tab active">
+      <h2>Add Transaction</h2>
+      <form id="txForm">
+        <label>Date <input type="date" id="txDate" required></label>
+        <label>Type
+          <select id="txType">
+            <option value="income">Income</option>
+            <option value="expense">Expense</option>
+            <option value="transfer">Transfer</option>
+            <option value="investment_buy">Investment Buy</option>
+            <option value="investment_sell">Investment Sell</option>
+          </select>
+        </label>
+        <label>Account
+          <select id="txAccount"></select>
+        </label>
+        <label>Amount (FCFA) <input type="number" id="txAmount" required step="0.01" min="0"></label>
+        <label>Category
+          <select id="txCategory"></select>
+        </label>
+        <label>Asset (optional for investments) <input type="text" id="txAsset" placeholder="e.g., BTC, Stock, Land"></label>
+        <label>Note <input type="text" id="txNote" placeholder="optional"></label>
+        <button type="submit">Save</button>
+      </form>
+    </section>
+
+    <section id="ledger" class="tab">
+      <h2>Ledger</h2>
+      <div class="filters">
+        <label>From <input type="date" id="fromDate"></label>
+        <label>To <input type="date" id="toDate"></label>
+        <label>Type
+          <select id="filterType">
+            <option value="">All</option>
+            <option value="income">Income</option>
+            <option value="expense">Expense</option>
+            <option value="transfer">Transfer</option>
+            <option value="investment_buy">Investment Buy</option>
+            <option value="investment_sell">Investment Sell</option>
+          </select>
+        </label>
+        <button id="applyFilters">Apply</button>
+      </div>
+      <table id="ledgerTable">
+        <thead>
+          <tr><th>Date</th><th>Type</th><th>Account</th><th>Category</th><th>Asset</th><th>Amount</th><th>Note</th><th></th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </section>
+
+    <section id="accounts" class="tab">
+      <h2>Accounts & Categories</h2>
+      <div class="two-col">
+        <div>
+          <h3>Accounts</h3>
+          <form id="acctForm">
+            <input id="acctName" placeholder="e.g., Cash, Bank, Mobile Money" required>
+            <select id="acctType">
+              <option value="cash">Cash</option>
+              <option value="bank">Bank</option>
+              <option value="mobile">Mobile Money</option>
+              <option value="investment">Investment</option>
+              <option value="other">Other</option>
+            </select>
+            <button type="submit">Add Account</button>
+          </form>
+          <ul id="acctList"></ul>
+        </div>
+        <div>
+          <h3>Categories</h3>
+          <form id="catForm">
+            <input id="catName" placeholder="e.g., Salary, Groceries, Rent" required>
+            <select id="catType">
+              <option value="income">Income</option>
+              <option value="expense">Expense</option>
+              <option value="investment">Investment</option>
+            </select>
+            <button type="submit">Add Category</button>
+          </form>
+          <ul id="catList"></ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="reports" class="tab">
+      <h2>Reports</h2>
+      <div class="report-cards">
+        <div class="card">
+          <h3>Current Balances</h3>
+          <ul id="balances"></ul>
+        </div>
+        <div class="card">
+          <h3>Totals (Selected Period)</h3>
+          <ul id="totals"></ul>
+        </div>
+        <div class="card">
+          <h3>Net Worth (Accounts + Investments)</h3>
+          <div id="networth"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="backup" class="tab">
+      <h2>Backup & Restore</h2>
+      <button id="exportBtn">Export Data (JSON)</button>
+      <input type="file" id="importFile" accept="application/json">
+      <p class="hint">Your data is stored locally on your device (IndexedDB). Export regularly for backup.</p>
+    </section>
+  </main>
+
+  <footer>
+    <small>Offline-capable • Your data stays on your device</small>
+  </footer>
+
+  <script src="db.js"></script>
+  <script src="app.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('service-worker.js');
+      });
+    }
+  </script>
+</body>
+</html>
